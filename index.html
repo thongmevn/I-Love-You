@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>I Love You 💖</title>
+        <style>
+  body {
+    margin:0; height:100vh;
+    display:flex; justify-content:center; align-items:center;
+    background: radial-gradient(circle at top, #ff9a9e, #fad0c4);
+    overflow:hidden; color:#fff; font-family: Arial, sans-serif;
+  }
+  h1 {
+    font-size: clamp(40px, 8vw, 80px);
+    text-shadow: 0 0 20px rgba(255,255,255,.7),
+                 0 0 40px rgba(255,105,180,.9);
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%,100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+  }
+  canvas {
+    position:fixed; inset:0; pointer-events:none;
+  }
+</style>
+    </head>
+    <body>
+        <canvas id="hearts"></canvas>
+        <h1>I ❤️ You</h1>
+
+        <script>
+/* hiệu ứng tim bay */
+const c = document.getElementById("hearts");
+const ctx = c.getContext("2d");
+c.width = innerWidth; c.height = innerHeight;
+window.addEventListener("resize", ()=>{c.width=innerWidth; c.height=innerHeight;});
+
+let hearts = [];
+function Heart(){
+  this.x = Math.random()*c.width;
+  this.y = c.height + Math.random()*100;
+  this.size = Math.random()*8+6;
+  this.speed = Math.random()*2+1;
+  this.alpha = Math.random()*0.5+0.5;
+}
+function drawHeart(h){
+  ctx.save();
+  ctx.translate(h.x,h.y);
+  ctx.scale(h.size/10,h.size/10);
+  ctx.beginPath();
+  ctx.moveTo(0,0);
+  ctx.bezierCurveTo(0,-3,-3,-3,-3,0);
+  ctx.bezierCurveTo(-3,3,0,5,0,7);
+  ctx.bezierCurveTo(0,5,3,3,3,0);
+  ctx.bezierCurveTo(3,-3,0,-3,0,0);
+  ctx.fillStyle=`rgba(255,0,100,${h.alpha})`;
+  ctx.fill();
+  ctx.restore();
+}
+function animate(){
+  ctx.clearRect(0,0,c.width,c.height);
+  if(hearts.length<80) hearts.push(new Heart());
+  hearts.forEach((h,i)=>{
+    h.y -= h.speed; if(h.y<-10) hearts.splice(i,1);
+    drawHeart(h);
+  });
+  requestAnimationFrame(animate);
+}
+animate();
+</script>
+    </body>
+</html>
